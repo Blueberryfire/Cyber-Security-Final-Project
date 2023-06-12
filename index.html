@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<script>
+    returnValue="valuelesss";
+    currentDir="home";
+    function getCommand(){
+        console.log(document.getElementById('command').value);
+    }
+    function init(){
+        directories=[[["tryMe1"],["nothingHere","tryAnotherDirectory",
+    "maybeTryCD",".tryADifferentDirectory"]],[["tryMe2"],["gettingCloser","tryAnotherOne"]],[["tryMe3"],["theresAHiddenFile",".lookAt#7","cdMe1","cdMe2","cdMe3","cdMe4","cdMe5","cdMe6","cdMe7","cdMe8","cdMe9","cdMe10","findTheHiddenDirectory"]],[["cdMe7"],["flag.jpg"]]];
+        rootDirectory=[[["root",[]]]]
+        returnValue="Enter Command Here";
+        const firstDiv = document.querySelector("div");
+
+        // const tryMe1 = document.createElement("p");
+        // tryMe1.append("tryMe1");
+        // firstDiv.append(tryMe1);
+        // tryMe1.id="tryMe1";
+        // const tryMe2 = document.createElement("p");
+        // tryMe2.append("tryMe2");
+        // firstDiv.append(tryMe2);
+        // tryMe2.id="tryMe2";
+        // const tryMe3 = document.createElement("p");
+        // tryMe3.append("tryMe3");
+        // firstDiv.append(tryMe3);
+        // tryMe3.id="tryMe3";
+
+        document.getElementById('command').onkeypress = function(e){
+            if (!e) e = window.event;
+            if (e.keyCode == '13'){
+                returnValue=this.value;
+                returnPressed();
+                var el = document.getElementById('command');
+                el.scrollIntoView(true);
+                return false;
+            }
+        }
+        // const pElement = document.createElement("p");
+        // pElement.append("text");
+        // const firstDiv = document.querySelector("div");
+        // firstDiv.append(pElement);
+        // console.log("BEFORE tryMe1");
+        // tryMe1();
+
+    }
+    function returnPressed(){
+        returnArray=returnValue.split(" ");
+        if (returnArray[0]=="ls"){
+            tryMe1();
+        }
+       
+        console.log(returnArray);
+       
+        resetForm2();
+
+        console.log("return value:" + returnValue);
+
+        if(returnValue=="ls"){
+            ls(false);
+        }
+        else if(returnValue=="ls -a"){
+            ls(true);
+        }
+        else if(returnValue=="cd"){
+            currentDir="home";
+        }
+        else if(returnArray[0]=="cd" && returnArray[1]){
+            cdDir(returnArray[1]);
+        }
+        else if(returnArray[0]=="cat" && returnArray[1]==directories[3][1][0] && currentDir==directories[3][0][0]){
+            cat();
+        }
+        else if(returnArray[0]=="mv"){
+            if(returnArray[1]!=null && returnArray[2]!=null){
+                mv(returnArray[1],returnArray[2]);
+            }
+            else{
+                const invalid=document.createElement("p");
+                invalid.append("Missing arguements - mv [existingFile] [newFileName]");
+                document.getElementById("instructionDiv").appendChild(invalid);
+            }
+        }
+        else if(returnArray[0]=="secret"){
+            if(returnArray[1]!=null){
+                secretCode();
+            }
+            else{
+                const invalid=document.createElement("p");
+                invalid.append("secret takes in a file/directory, please input one next time");
+                document.getElementById("instructionDiv").appendChild(invalid);
+            }
+        }
+        else{
+            const invalid=document.createElement("p");
+            invalid.append(returnValue + ": invalid command");
+            document.getElementById("instructionDiv").appendChild(invalid);
+        }
+        
+        document.getElementById("command").value="";
+        const spacer=document.createElement("p");
+        spacer.append("------------------------------------");
+        document.getElementById("instructionDiv").appendChild(spacer);
+    }
+    function mv(directory, newName){
+        if(currentDir!="home"){
+            pathFound=false;
+            currentDirNumber=-1;
+            currentDirSubIndex=-1;
+            for (let i = 0; i < directories.length; i++) {
+                if(directories[i][0][0]==currentDir){
+                    currentDirNumber=i;
+                    break;
+                }
+            }
+            for (let i = 0; i < directories[currentDirNumber][1].length; i++) {
+                if(directories[currentDirNumber][1][i]==directory){
+                    pathFound=true;
+                    currentDirSubIndex=i;
+                    break;
+                }
+            }
+            if(!pathFound){
+                const notFound=document.createElement("p");
+                notFound.append("cd: " + directory + ": No such file or directory");
+                document.getElementById("instructionDiv").appendChild(notFound);
+            }
+            else{
+                directories[currentDirNumber][1][currentDirSubIndex]=newName;
+            }
+        }
+        else{
+            pathFound=false;
+            currentDirNumber=-1;
+            for (let i = 0; i < directories.length; i++) {
+                if(directories[i][0][0]==directory){
+                    currentDirNumber=i;
+                    pathFound=true;
+                    break;
+                }
+            }
+            if(!pathFound){
+                const notFound=document.createElement("p");
+                notFound.append("cd: " + directory + ": No such file or directory");
+                document.getElementById("instructionDiv").appendChild(notFound);
+            }
+            else{
+                directories[currentDirNumber][0][0]=newName;
+            }
+        }
+    }
+    function getSubDirectory(path){
+       
+    }
+    function tryMe1(){
+       
+    }
+    function resetForm(){
+        const pForm=document.getElementById("pForm");
+        const formForm=document.getElementById("formForm");
+        const inputForm=document.getElementById("command");
+
+        inputForm.remove();
+        formForm.remove();
+
+        const formReplacement=document.createElement("p");
+
+
+
+
+        pForm.parentNode.replaceChild(formReplacement,pForm);
+        formReplacement.innerHTML="user@jonahs-vm:/tmp/tutorial$ " + returnValue;
+
+
+
+
+        const pFormNew=document.createElement("p");
+        const formFormNew=document.createElement("form");
+        const inputFormNew=document.createElement("input");
+    }
+    function resetForm2(){
+        const oldCommand=document.createElement("p");
+        oldCommand.append("user@jonahs-vm:/tmp/" + currentDir + "$ " + returnValue);
+
+
+
+
+        const divCommand=document.getElementById(instructionDiv);
+        document.getElementById("instructionDiv").appendChild(oldCommand);
+        console.log("HIIII");
+    }
+
+
+
+
+    function ls(showHidden){
+        dir=currentDir;
+        if(dir=="home"){
+            for (let i = 0; i < 3; i++) {
+                if(directories[i][0][0].substring(0,1)!="." || showHidden){
+                    const subDir=document.createElement("p");
+                    subDir.append(directories[i][0][0]);
+                    document.getElementById("instructionDiv").appendChild(subDir);
+                }
+            }
+        }
+        else{
+            dirNumber=-1;
+            for (let i = 0; i < directories.length; i++) {
+                if(dir==directories[i][0][0]){
+                    dirNumber=i;
+                }
+            }
+            for (let i = 0; i < directories[dirNumber][1].length; i++) {
+                if(directories[dirNumber][1][i].substring(0,1)!="." || showHidden){
+                    const subDir=document.createElement("p");
+                    subDir.append(directories[dirNumber][1][i]);
+                    document.getElementById("instructionDiv").appendChild(subDir);
+                }
+            }
+        }
+    }
+   function cd(){
+        currentDir="home";
+   }
+   function cdDir(directory){
+        pathFound=false;
+        currentDirNumber=-1;
+        for (let i = 0; i < directories.length; i++) {
+            if(directories[i][0][0]==currentDir){
+                currentDirNumber=i;
+                break;
+            }
+        }
+       
+        for (let i = 0; i < directories.length; i++) {
+            if(directories[i][0][0]==directory){
+                pathFound=true;
+                currentDir=directories[i][0][0];
+            }
+        }
+        if(!pathFound){
+            const notFound=document.createElement("p");
+            notFound.append("cd: " + directory + ": No such file or directory");
+            document.getElementById("instructionDiv").appendChild(notFound);
+        }
+        else{
+            document.getElementById("pForm").innerHTML="user@jonahs-vm:/tmp/" + currentDir + "$ ";
+        }
+   }
+   function cat(){
+        const catOutput=document.createElement("p");
+        message="0001101001011000110101001010101011101010000011111010100101101011011001010110110110100101010101000111110100011011010101010001010101110101001011010100101010100101100101011111110001101010110110001010111011010001010001010100011100101010001110101010";
+        if(directories[3][1][0].indexOf(".")==-1){
+            message="secret code: linuxMaster";
+        }
+        catOutput.append(message);
+        document.getElementById("instructionDiv").appendChild(catOutput);
+   }
+   function secretCode(){
+    const catOutput=document.createElement("p");
+    message="You input the wrong secret code, please try again";
+    if(returnArray[1]=="linuxMaster"){
+        message="You truly are the Linux Master! Congrats and welcome to the world of Information Technology!!!";
+        catOutput.id="finalMessage";
+    }
+    catOutput.append(message);
+    document.getElementById("instructionDiv").appendChild(catOutput);
+   }
+   
+</script>
+<body onload="init();">
+    <div id="instructionDiv"><p id="pInstructions">Welcome! Use everything you've learned from the Google Slide presentation to find the secret code hidden somewhere in here. Once you find it use a custom command "secret [code]" to complete the challenge and show your understanding of Linux!</p></div>
+   
+    <div id="divCommand">
+        <form id="formForm" style="display:inline;"><span id="pForm">
+            user@jonahs-vm:/tmp/home$</span><input type="text" value="Enter Command Here 2" name="command" id="command" style="display:inline;">
+        </form>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

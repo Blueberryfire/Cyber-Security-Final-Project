@@ -1,0 +1,10 @@
+#command{
+    font-size: 60px;
+}
+#pInstructions{
+    font-size: 60px;
+}
+#finalMessage{
+    font-size: 100px;
+    color: green;
+}
